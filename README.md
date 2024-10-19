@@ -79,3 +79,17 @@ flask run
 ```
 10. Navigate to http://127.0.0.1:5000 and you should see the web application running
 11. Sign up and log in to see the full functionality of the web application
+
+## Demo
+
+![Homepage Screenshot](homepage.png)
+
+*Screenshot of the home page interface.*
+
+![Upcoming Screenshot](upcoming.png)
+
+*Screenshot of the upcoming page interface.*
+
+![Profile Screenshot](profile.png)
+
+*Screenshot of the profile page interface.*
