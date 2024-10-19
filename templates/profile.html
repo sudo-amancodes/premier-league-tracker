@@ -1,0 +1,110 @@
+{% extends "_layout.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="text-center mb-4">Profile</h2>
+
+        <div class="card text-center p-4 mb-4">
+            <div class="profile-picture-container d-flex justify-content-center align-items-center mb-4">
+                <img src="{{ url_for('static', filename='profile_pics/' ~ current_user.profile_picture) }}" 
+                     alt="Profile Picture" class="rounded-circle shadow" style="width: 150px; height: 150px; object-fit: cover;">
+            </div>
+            
+            <form action="{{ url_for('update_profile_pic') }}" method="POST" enctype="multipart/form-data" class="mt-4">
+                <div class="custom-file w-50 mx-auto">
+                    <input type="file" class="custom-file-input" id="profilePic" name="profile_pic" required>
+                    <label class="custom-file-label text-left" for="profilePic">Choose a file</label>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Change Profile Picture</button>
+            </form>
+        </div>
+
+        <div class="text-center mb-4">
+            <h5>You are following <span class="badge badge-primary">{{ teams_count }}</span> teams.</h5>
+        </div>
+
+        {% if watchlist_teams %}
+        <div class="card p-3 mb-4">
+            <h4 class="text-center">Teams in Your Watchlist</h4>
+            <ul class="list-group list-group-flush">
+                {% for team in watchlist_teams %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <img src="{{ team.logo }}" alt="{{ team.team_name }}" style="width: 40px; height: auto; margin-right: 10px;">
+                        {{ team.team_name }}
+                    </div>
+                    <form action="{{ url_for('remove_team', team_id=team.team_id) }}" method="POST" class="mb-0">
+                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <p class="text-center mt-3">You are not following any teams yet.</p>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('logout') }}" class="btn btn-warning">Logout</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-picture-container {
+        margin-bottom: 20px;
+    }
+
+    .custom-file-input:lang(en)~.custom-file-label::after {
+        content: "Browse";
+    }
+
+    .custom-file-label {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .card {
+        border-radius: 15px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .rounded-circle {
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+    }
+
+    .shadow {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary, .btn-warning, .btn-danger {
+        border-radius: 15px;
+    }
+
+    .custom-file {
+        width: 100%;
+    }
+
+    .btn {
+        border-radius: 15px;
+        margin: 10px 10px
+    }
+
+    .list-group-item {
+        margin-bottom: 10px;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .mx-auto {
+        margin: 0 auto;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "_layout.html" %}
+
+{% block title %}Upcoming Matches{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="text-center mb-4">Upcoming Matches for Your Teams</h2>
+
+        <div class="form-group text-center">
+            <label for="sort_by">Sort by:</label>
+            <select id="sort_by" class="form-control d-inline-block w-auto" onchange="sortMatches()">
+                <option value="date_top" {% if sort_by == 'date_top' %}selected{% endif %}>Date (Ascending)</option>
+                <option value="date_bottom" {% if sort_by == 'date_bottom' %}selected{% endif %}>Date (Descending)</option>
+                <option value="home_team" {% if sort_by == 'home_team' %}selected{% endif %}>Home Team (A-Z)</option>
+                <option value="away_team" {% if sort_by == 'away_team' %}selected{% endif %}>Away Team (A-Z)</option>
+            </select>
+        </div>
+
+        {% if grouped_matches %}
+        {% for date, matches in grouped_matches.items() %}
+        <h4 class="mt-4">{{ date }}</h4>
+        <ul class="list-group mb-4">
+            {% for match in matches %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <img src="{{ match.home_logo }}" alt="{{ match.home_team }}" style="width: 40px; height: 40px; margin-right: 10px;">
+                    <strong>{{ match.home_team }}</strong>
+
+                    <span style="margin: 0 10px;">vs</span>
+
+                    <strong>{{ match.away_team }}</strong>
+                    <img src="{{ match.away_logo }}" alt="{{ match.away_team }}" style="width: 40px; height: 40px; margin-left: 10px;">
+                </div>
+
+            </li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+        {% elif response_status == 404 %}
+        <p class="text-center">API was called too many times. Wait 1 minute.</p>
+        {% elif response_status == 200 %}
+        <p class="text-center">No upcoming matches found for your teams.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function sortMatches() {
+        const sortBy = document.getElementById('sort_by').value;
+        window.location.href = `{{ url_for('upcoming_games') }}?sort_by=${sortBy}`;
+    }
+</script>
+
+{% endblock %}
